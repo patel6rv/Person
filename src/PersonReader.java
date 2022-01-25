@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -26,7 +27,8 @@ public class PersonReader
         JFileChooser chooser = new JFileChooser();
         File selectedFile;
         String rec= "";
-        int count = 0;
+        ArrayList<Person> personArrayList = new ArrayList<>();
+
 
         try
         {
@@ -41,23 +43,20 @@ public class PersonReader
                 InputStream in = new BufferedInputStream(Files.newInputStream(file, CREATE));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-                System.out.println(" ID#     Firstname     Lastname     Title   YOB" + "\n ===================================================");
-
                 while(reader.ready())
                 {
-                    if(count != 0)
-                    {
-                        rec = reader.readLine();
-                        System.out.printf("\n\n %-60s ", rec);
-                    }
-                    else
-                    {
-                        rec = reader.readLine();
-                        System.out.printf(" %-60s ", rec);
-                    }
-                    count = 1;
+                    rec = reader.readLine();
+                    String[] lineInArray = rec.split(", ");
+                    Person folk = new Person(lineInArray[0], lineInArray[1], lineInArray[2], lineInArray[3], Integer.parseInt(lineInArray[4]));
+                    personArrayList.add(folk);
                 }
                 reader.close();
+                System.out.printf("%-20s%-20s%-20s%-20s%-20s\n", "ID#", "Firstname", "Lastname", "Title", "YOB");
+                System.out.println("=".repeat(90));
+                for(Person listedPerson : personArrayList)
+                {
+                    System.out.printf("%-20s%-20s%-20s%-20s%-20s\n\n", listedPerson.getIDNum(), listedPerson.getFirstName(), listedPerson.getLastName(), listedPerson.getTitle(), listedPerson.getYOB());
+                }
                 System.out.println("\n\nData file read!");
             }
         }

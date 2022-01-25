@@ -24,14 +24,13 @@ public class PersonGenerator
     public static void main(String[] args)
     {
         Scanner in = new Scanner(System.in);
-	    ArrayList <String> recs = new ArrayList<>();
+	    ArrayList <Person> personArrayList = new ArrayList<>();
 
         //list values
-        String id = "";
         String firstName = "";
         String lastName = "";
         String title = "";
-        int yearOfBirth;
+        int YOB;
 
         //do while loop condition
         boolean check = true;
@@ -40,13 +39,13 @@ public class PersonGenerator
 
         do
         {
-            id = SafeInput.getNonZeroLenString(in, "Please enter the person's ID");
             firstName = SafeInput.getNonZeroLenString(in, "Please enter the person's firstName");
             lastName = SafeInput.getNonZeroLenString(in, "Please enter the person's lastName");
             title = SafeInput.getNonZeroLenString(in, "Please enter the person's title (Ex: Mr., Mrs., Ms., Dr., etc.)");
-            yearOfBirth = SafeInput.getInt(in, "Please enter the person's year of birth");
+            YOB = SafeInput.getRangedInt(in, "Please enter the person's year of birth", 1940, 2000);
 
-            recs.add("" + id + ",   " + firstName + ",     " + lastName + ",     " + title + ",   " + yearOfBirth);
+            Person folk = new Person(firstName, lastName, title, YOB);
+            personArrayList.add(folk);
 
             check = SafeInput.getYNConfirm(in, "Do you wish to add another person?");
         } while(check);
@@ -60,9 +59,9 @@ public class PersonGenerator
             OutputStream out = new BufferedOutputStream(Files.newOutputStream(file, CREATE));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 
-            for(String rec : recs)
+            for(Person rec : personArrayList)
             {
-                writer.write(rec, 0, rec.length());
+                writer.write(rec.toCSVRecord());
                 writer.newLine();
             }
             writer.close();
@@ -72,5 +71,6 @@ public class PersonGenerator
         {
             e.printStackTrace();
         }
+
     }
 }
